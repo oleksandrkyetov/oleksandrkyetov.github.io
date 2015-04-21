@@ -1,0 +1,11 @@
+.timer {
+	text-align: center;
+	font-size: xx-large;
+}
+.title {
+	text-align: center;
+	font-size: large;
+	padding: 10px;
+	background-color: #f3f3f3;
+	border-color: #dddddd;
+}

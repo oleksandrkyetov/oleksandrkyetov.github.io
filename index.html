@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+	<head>
+		<title>My Page</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<!-- JQuery Mobile styles -->
+		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.css">
+		<!-- Custom styles -->
+		<link rel="stylesheet" href="css/styles.css">
+
+		<!-- JQuery Mobile -->
+		<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+		<!-- JQuery -->
+		<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.js"></script>
+		<!-- Moment.js for time manipulation -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.2/moment-with-locales.js"></script>
+		<!-- Custom script -->
+		<script src="js/scripts.js"></script>
+	</head>
+	<body>
+		<div data-role="page">
+			<div data-role="panel" data-display="overlay" id="menu">
+				<h2>Panel Header..</h2>
+				<p>Some text in the panel..</p>
+			</div>
+
+			<div data-role="header">
+				<a href="#menu" class="ui-btn ui-btn-left ui-btn-icon-left ui-icon-home     ui-btn-icon-notext"></a>
+				<h1>Planner</h1>
+			</div>
+
+			<div class="gym title">
+				Time to Gym
+			</div>
+			<div class="gym timer">
+				<div class="time">--:--:--</div>
+			</div>
+
+			<div class="drink title">Time to Drink</div>
+			<div class="drink timer">
+				<div class="time">--:--:--</div>
+			</div>
+
+			<div data-role="footer">
+				<h1></h1>
+			</div>
+		</div>
+	</body>
+</html>
