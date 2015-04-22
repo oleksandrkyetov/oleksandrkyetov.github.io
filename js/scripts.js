@@ -114,7 +114,7 @@ $(document).ready(function() {
 				toGym();
 				toDrink();
 				toEvent();
-			}, 1000);
+			}, 500);
 		}
 	});
 
