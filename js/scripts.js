@@ -1,6 +1,7 @@
 var OPTIONS_KEY = 'options';
 var EVENTS_KEY = 'events';
 var DB = new PouchDB('events');
+var INTERVAL = -1;
 
 // Default options
 var OPTIONS = {
@@ -27,71 +28,87 @@ var options = {};
 var events = {};
 
 $(document).ready(function() {
+	var saveOptionsLink = $('#saveOptionsLink');
+	var gymTimeInput = $('#gymTimeInput');
+	var drinkTimeInput = $('#drinkTimeInput');
+	var saveSuccessPopup = $('.save.success.popup');
+	var saveFailPopup = $('.save.fail.popup');
+	var timersPopup = $('.timers.popup');
+
 	var gymTimer = $('#main .gym.timer');
 	var drinkTimer = $('#main .drink.timer');
 
 	var eventName = $('#main .event.name');
 	var eventTimer = $('#main .event.timer');
 
-	// Count time to gym
-	var toGym = function() {
-		var next = moment().hour(options.gym.next.hour)
-			.minute(options.gym.next.minute)
-			.second(options.gym.next.second);
-		var current = moment();
-
-		if (next.isBefore(current)) {
-			// Add additional day if current is less than next one
-			next.add(moment.duration({
-				'days' : 1
-			}));
-		}
-
-		var diff = next.diff(current);
-		if (diff < 200) {
-			$('.gym.popup').popup('open', {});
-		}
-
-		gymTimer.find('.time').html(moment.utc(diff).format('HH:mm:ss'));
-	};
-
-	// Count time to drink
-	var toDrink = function() {
-		var next = moment()
-			.minute(options.drink.next.minute)
-			.second(options.gym.next.second);
-		var current = moment();
-
-		if (next.isBefore(current)) {
-			// Add additional period if current is less than next one
-			next.add(moment.duration({
-				'minutes': options.drink.next.minute
-			}));
-		}
-
-		var diff = next.diff(current);
-		if (diff < 200) {
-			$('.drink.popup').popup('open', {});
-		}
-
-		drinkTimer.find('.time').html(moment.utc(diff).format('HH:mm:ss'));
-	};
-
 	// Events
 	var toEvent = function() {
 		if (events.length) {
 
 		} else {
-			eventName.find('.text').html('Nothing is scheduled');
+			eventName.find('.text').html('Nothing is scheduled yet ...');
 			eventTimer.find('.time').html('--:--:--');
 		}
 	};
 
+	var toDo = function() {
+		var timersPopupMessage = timersPopup.find('span');
+		timersPopupMessage.html('');
+
+		var current = moment();
+		var nextGym = moment().hour(options.gym.next.hour)
+			.minute(options.gym.next.minute)
+			.second(options.gym.next.second);
+		var nextDrink = moment()
+			.minute(options.drink.next.minute)
+			.second(options.gym.next.second);
+
+		if (nextGym.isBefore(current)) {
+			// Add additional day if current is less than next one
+			nextGym.add(moment.duration({
+				'days' : 1
+			}));
+		}
+
+		if (nextDrink.isBefore(current)) {
+			// Add additional period if current is less than next one
+			nextDrink.add(moment.duration({
+				'minutes': options.drink.next.minute
+			}));
+		}
+
+		var diffGym = nextGym.diff(current);
+		if (diffGym < 100) {
+			timersPopupMessage.html(timersPopupMessage.html() + '<div>It is time to go to the Gym</div>');
+		}
+
+		var diffDrink = nextDrink.diff(current);
+		if (diffDrink < 100) {
+			timersPopupMessage.html(timersPopupMessage.html() + '<div>It is time to drink</div>');
+		}
+
+		gymTimer.find('.time').html(moment.utc(diffGym).format('HH:mm:ss'));
+		drinkTimer.find('.time').html(moment.utc(diffDrink).format('HH:mm:ss'));
+
+		if (timersPopupMessage.html().length > 0) {
+			timersPopup.popup('open', {});
+			clearInterval(INTERVAL);
+		}
+	};
+
+	var count = function() {
+		// Counters
+		INTERVAL = setInterval(function() {
+			toDo();
+			toEvent();
+		}, 1000);
+	};
+
 	var updateOptions = function() {
-		$('#gymTimeInput').val(moment().hour(options.gym.next.hour)
+		gymTimeInput.val(moment().hour(options.gym.next.hour)
 			.minute(options.gym.next.minute)
 			.second(options.gym.next.second).format('HH:mm:ss'));
-		$('#drinkTimeInput').val(options.drink.next.minute);
+		drinkTimeInput.val(options.drink.next.minute);
 	};
 
 	// Check if options is already in database
@@ -109,12 +126,8 @@ $(document).ready(function() {
 		} else {
 			options = doc;
 
-			// Counters
-			setInterval(function() {
-				toGym();
-				toDrink();
-				toEvent();
-			}, 500);
+			// Start timers
+			count();
 		}
 	});
 
@@ -123,12 +136,55 @@ $(document).ready(function() {
 		if (err) {
 			console.log('There is errors getting events from PouchDB ...');
 		} else {
-			options = doc;
+			events = doc;
 		}
+	});
+
+	// Save entered data on click
+	saveOptionsLink.on('click', function() {
+		if (!moment(gymTimeInput.val(), 'HH:mm:ss', true).isValid()) {
+			saveFailPopup.find('span').html('Gym time format is incorrect ...');
+			saveFailPopup.popup('open', {});
+			return;
+		}
+
+		if (!moment(drinkTimeInput.val(), 'mm', true).isValid()) {
+			saveFailPopup.find('span').html('Drink time format is incorrect ...');
+			saveFailPopup.popup('open', {});
+			return;
+		}
+
+		var gymVal = moment(gymTimeInput.val(), 'HH:mm:ss');
+		options.gym.next = {
+			'hour': gymVal.hour(),
+			'minute': gymVal.minute(),
+			'second': gymVal.second()
+		};
+		var drinkVal = moment(drinkTimeInput.val(), 'mm');
+		options.drink.next = {
+			'minute': drinkVal.minute()
+		};
+
+		// Save options
+		DB.put(options, function callback(err, doc) {
+			if (err) {
+				saveFailPopup.find('span').html('Error when store options ...');
+				saveFailPopup.popup('open', {});
+			}
+
+			// Update document revision
+			options._rev = doc.rev;
+			saveSuccessPopup.popup('open', {});
+		});
 	});
 
 	// Trigger options update on page change
 	$(document).on('pagecontainerchange', function(event, ui) {
 		updateOptions();
+	});
+
+	// Resume count on popup close
+	$(document).find('.timers').on('popupafterclose', function() {
+		count();
 	});
 });

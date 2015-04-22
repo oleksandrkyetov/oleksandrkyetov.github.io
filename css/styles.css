@@ -43,3 +43,10 @@ label.label {
 	font-weight: 300;
 	font-size: small;
 }
+.ui-popup-container {
+	width: 60%;
+}
+.popup .label {
+	background-color: #ffffff;
+	border-color: #ffffff;
+}
