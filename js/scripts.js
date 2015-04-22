@@ -14,7 +14,8 @@ var OPTIONS = {
 	},
 	'drink': {
 		'next': {
-			'minute': 30
+			'minute': 30,
+			'second': 0
 		}
 	}
 };
@@ -47,7 +48,7 @@ $(document).ready(function() {
 		}
 
 		var diff = next.diff(current);
-		if (diff < 100) {
+		if (diff < 200) {
 			$('.gym.popup').popup('open', {});
 		}
 
@@ -56,7 +57,9 @@ $(document).ready(function() {
 
 	// Count time to drink
 	var toDrink = function() {
-		var next = moment().minute(options.drink.next.minute);
+		var next = moment()
+			.minute(options.drink.next.minute)
+			.second(options.gym.next.second);
 		var current = moment();
 
 		if (next.isBefore(current)) {
@@ -67,7 +70,7 @@ $(document).ready(function() {
 		}
 
 		var diff = next.diff(current);
-		if (diff < 100) {
+		if (diff < 200) {
 			$('.drink.popup').popup('open', {});
 		}
 
