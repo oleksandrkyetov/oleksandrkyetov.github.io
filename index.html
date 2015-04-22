@@ -22,13 +22,17 @@
 		<script src="js/scripts.js"></script>
 	</head>
 	<body>
-		<div data-role="page">
+		<div data-role="page" id="home">
 			<div data-role="panel" data-display="overlay" id="menu">
-				<p>Some text in the panel. .</p>
+				<ul data-role="listview">
+					<li data-icon="delete"><a href="#" data-rel="close">Close</a></li>
+					<li data-icon="gear"><a href="#options">Options</a></li>
+					<li data-icon="info"><a href="#info">Info</a></li>
+				</ul>
 			</div>
 
 			<div data-role="header" class="header">
-				<a href="#menu" class="ui-nodisc-icon ui-alt-icon ui-btn-left ui-btn ui-icon-bars ui-btn-icon-notext ui-corner-all"></a>
+				<a href="#menu" class="ui-btn ui-icon-bars ui-btn-icon-left ui-shadow ui-corner-all ui-btn-icon-notext"></a>
 				<h1>Planner</h1>
 			</div>
 
@@ -57,6 +61,30 @@
 			<div class="event timer">
 				<div class="time">--:--:--</div>
 			</div>
+
+			<div data-role="footer" class="footer ui-footer-fixed">
+				<h1>Copyright 2015</h1>
+			</div>
+		</div>
+
+		<div data-role="page" id="options">
+			<div data-role="header" class="header">
+				<h1>Options</h1>
+			</div>
+
+			Options
+
+			<div data-role="footer" class="footer ui-footer-fixed">
+				<h1>Copyright 2015</h1>
+			</div>
+		</div>
+
+		<div data-role="page" id="info">
+			<div data-role="header" class="header">
+				<h1>Options</h1>
+			</div>
+
+			Info
 
 			<div data-role="footer" class="footer ui-footer-fixed">
 				<h1>Copyright 2015</h1>

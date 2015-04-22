@@ -8,6 +8,13 @@
 	font-size: large;
 	color: #888888;
 }
+#menu {
+	max-width: 120px;
+}
+#menu li {
+	font-family: sans-serif;
+	font-weight: 900;
+}
 .title {
 	text-align: center;
 	padding: 10px;
