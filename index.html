@@ -9,6 +9,9 @@
 		<!-- Custom styles -->
 		<link rel="stylesheet" href="css/styles.css">
 
+
+		<!-- PouchDB -->
+		<script src="http://cdn.jsdelivr.net/pouchdb/3.4.0/pouchdb.min.js"></script>
 		<!-- JQuery Mobile -->
 		<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
 		<!-- JQuery -->
@@ -21,29 +24,42 @@
 	<body>
 		<div data-role="page">
 			<div data-role="panel" data-display="overlay" id="menu">
-				<h2>Panel Header..</h2>
-				<p>Some text in the panel..</p>
+				<p>Some text in the panel. .</p>
 			</div>
 
-			<div data-role="header">
-				<a href="#menu" class="ui-btn ui-btn-left ui-btn-icon-left ui-icon-home     ui-btn-icon-notext"></a>
+			<div data-role="header" class="header">
+				<a href="#menu" class="ui-nodisc-icon ui-alt-icon ui-btn-left ui-btn ui-icon-bars ui-btn-icon-notext ui-corner-all"></a>
 				<h1>Planner</h1>
 			</div>
 
-			<div class="gym title">
-				Time to Gym
-			</div>
+			<div class="gym title">Time to Gym</div>
 			<div class="gym timer">
 				<div class="time">--:--:--</div>
+			</div>
+			<div data-role="popup" class="gym popup ui-content" data-dismissible="false" data-position-to=".gym.timer .time">>
+				<a href="#" data-rel="back" class="ui-btn ui-corner-all ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-left"></a>
+				<p>It is time to go to Gym !!!</p>
 			</div>
 
 			<div class="drink title">Time to Drink</div>
 			<div class="drink timer">
 				<div class="time">--:--:--</div>
 			</div>
+			<div data-role="popup" class="drink popup ui-content" data-dismissible="false" data-position-to=".drink.timer .time">
+				<a href="#" data-rel="back" class="ui-btn ui-corner-all ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-left"></a>
+				<p>It is time to Drink !!!</p>
+			</div>
 
-			<div data-role="footer">
-				<h1></h1>
+			<div class="event title">Upcoming events</div>
+			<div class="event name">
+				<div class="text">-</div>
+			</div>
+			<div class="event timer">
+				<div class="time">--:--:--</div>
+			</div>
+
+			<div data-role="footer" class="footer ui-footer-fixed">
+				<h1>Copyright 2015</h1>
 			</div>
 		</div>
 	</body>

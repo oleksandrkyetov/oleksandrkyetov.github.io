@@ -1,4 +1,10 @@
-var options = {
+var OPTIONS_KEY = 'options';
+var EVENTS_KEY = 'events';
+var DB = new PouchDB('events');
+
+// Default options
+var OPTIONS = {
+	'_id': 'options',
 	'gym': {
 		'next': {
 			'hour': 19,
@@ -14,9 +20,44 @@ var options = {
 	}
 };
 
+// Options storage
+var options = {};
+
+// Check if options is already in database
+DB.get(OPTIONS_KEY, function(err, doc) {
+	if (err) {
+		console.log('There is errors getting options from PouchDB ...');
+
+		// Put default options in database
+		DB.put(OPTIONS, function callback(err, doc) {
+			if (err) {
+				console.log('There is errors storing options to PouchDB ...');
+			}
+			options = OPTIONS;
+		});
+	} else {
+		options = doc;
+	}
+});
+
+// Events storage
+var events = {};
+
+// Check if options is already in database
+DB.get(EVENTS_KEY, function(err, doc) {
+	if (err) {
+		console.log('There is errors getting events from PouchDB ...');
+	} else {
+		options = doc;
+	}
+});
+
 $(document).ready(function() {
 	var gymTimer = $('.gym.timer');
 	var drinkTimer = $('.drink.timer');
+
+	var eventName = $('.event.name');
+	var eventTimer = $('.event.timer');
 
 	// Count time to gym
 	var toGym = function() {
@@ -32,7 +73,12 @@ $(document).ready(function() {
 			}));
 		}
 
-		gymTimer.find('.time').html(moment.utc(next.diff(current)).format("HH:mm:ss"));
+		var diff = next.diff(current);
+		if (diff < 100) {
+			$('.gym.popup').popup('open', {});
+		}
+
+		gymTimer.find('.time').html(moment.utc(diff).format('HH:mm:ss'));
 	};
 
 	// Count time to drink
@@ -49,12 +95,28 @@ $(document).ready(function() {
 			}));
 		}
 
-		drinkTimer.find('.time').html(moment.utc(next.diff(current)).format("HH:mm:ss"));
+		var diff = next.diff(current);
+		if (diff < 100) {
+			$('.drink.popup').popup('open', {});
+		}
+
+		drinkTimer.find('.time').html(moment.utc(diff).format('HH:mm:ss'));
+	};
+
+	// Events
+	var toEvent = function() {
+		if (events.length) {
+
+		} else {
+			eventName.find('.text').html('Nothing is scheduled');
+			eventTimer.find('.time').html('--:--:--');
+		}
 	};
 
 	// Counters
 	setInterval(function() {
 		toGym();
 		toDrink();
+		toEvent();
 	}, 1000);
 });

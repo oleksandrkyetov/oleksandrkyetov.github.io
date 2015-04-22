@@ -1,11 +1,26 @@
+.name {
+	text-align: center;
+	font-size: large;
+	color: #888888;
+}
 .timer {
 	text-align: center;
-	font-size: xx-large;
+	font-size: large;
+	color: #888888;
 }
 .title {
 	text-align: center;
-	font-size: large;
 	padding: 10px;
+	font-weight: 700;
 	background-color: #f3f3f3;
 	border-color: #dddddd;
+}
+.header .ui-title {
+	font-family: sans-serif;
+	font-weight: 900;
+}
+.footer .ui-title {
+	font-family: sans-serif;
+	font-weight: 300;
+	font-size: small;
 }
