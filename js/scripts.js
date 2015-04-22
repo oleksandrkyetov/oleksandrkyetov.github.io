@@ -14,8 +14,7 @@ var OPTIONS = {
 	},
 	'drink': {
 		'next': {
-			'minute': 30,
-			'second': 0
+			'minute': 30
 		}
 	}
 };
@@ -23,41 +22,15 @@ var OPTIONS = {
 // Options storage
 var options = {};
 
-// Check if options is already in database
-DB.get(OPTIONS_KEY, function(err, doc) {
-	if (err) {
-		console.log('There is errors getting options from PouchDB ...');
-
-		// Put default options in database
-		DB.put(OPTIONS, function callback(err, doc) {
-			if (err) {
-				console.log('There is errors storing options to PouchDB ...');
-			}
-			options = OPTIONS;
-		});
-	} else {
-		options = doc;
-	}
-});
-
 // Events storage
 var events = {};
 
-// Check if options is already in database
-DB.get(EVENTS_KEY, function(err, doc) {
-	if (err) {
-		console.log('There is errors getting events from PouchDB ...');
-	} else {
-		options = doc;
-	}
-});
-
 $(document).ready(function() {
-	var gymTimer = $('.gym.timer');
-	var drinkTimer = $('.drink.timer');
+	var gymTimer = $('#main .gym.timer');
+	var drinkTimer = $('#main .drink.timer');
 
-	var eventName = $('.event.name');
-	var eventTimer = $('.event.timer');
+	var eventName = $('#main .event.name');
+	var eventTimer = $('#main .event.timer');
 
 	// Count time to gym
 	var toGym = function() {
@@ -83,15 +56,13 @@ $(document).ready(function() {
 
 	// Count time to drink
 	var toDrink = function() {
-		var next = moment().minute(options.drink.next.minute)
-			.second(options.drink.next.second);
+		var next = moment().minute(options.drink.next.minute);
 		var current = moment();
 
 		if (next.isBefore(current)) {
 			// Add additional period if current is less than next one
 			next.add(moment.duration({
-				'minutes': options.drink.next.minute,
-				'seconds': options.drink.next.second
+				'minutes': options.drink.next.minute
 			}));
 		}
 
@@ -113,10 +84,48 @@ $(document).ready(function() {
 		}
 	};
 
-	// Counters
-	setInterval(function() {
-		toGym();
-		toDrink();
-		toEvent();
-	}, 1000);
+	var updateOptions = function() {
+		$('#gymTimeInput').val(moment().hour(options.gym.next.hour)
+			.minute(options.gym.next.minute)
+			.second(options.gym.next.second).format('HH:mm:ss'));
+		$('#drinkTimeInput').val(options.drink.next.minute);
+	};
+
+	// Check if options is already in database
+	DB.get(OPTIONS_KEY, function(err, doc) {
+		if (err) {
+			console.log('There is errors getting options from PouchDB ...');
+
+			// Put default options in database
+			DB.put(OPTIONS, function callback(err, doc) {
+				if (err) {
+					console.log('There is errors storing options to PouchDB ...');
+				}
+				options = OPTIONS;
+			});
+		} else {
+			options = doc;
+
+			// Counters
+			setInterval(function() {
+				toGym();
+				toDrink();
+				toEvent();
+			}, 1000);
+		}
+	});
+
+	// Check if options is already in database
+	DB.get(EVENTS_KEY, function(err, doc) {
+		if (err) {
+			console.log('There is errors getting events from PouchDB ...');
+		} else {
+			options = doc;
+		}
+	});
+
+	// Trigger options update on page change
+	$(document).on('pagecontainerchange', function(event, ui) {
+		updateOptions();
+	});
 });

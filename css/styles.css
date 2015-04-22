@@ -1,11 +1,13 @@
-.name {
+.ui-field-contain {
+	border: none;
+}
+.centered {
 	text-align: center;
-	font-size: large;
+}
+.ui-field-contain .gray {
 	color: #888888;
 }
-.timer {
-	text-align: center;
-	font-size: large;
+.gray {
 	color: #888888;
 }
 #menu {
@@ -15,12 +17,22 @@
 	font-family: sans-serif;
 	font-weight: 900;
 }
-.title {
-	text-align: center;
+.padded {
 	padding: 10px;
+}
+.padded-sides {
+	padding-left: 10px;
+	padding-right: 10px;
+}
+.title {
+	font-family: sans-serif;
 	font-weight: 700;
 	background-color: #f3f3f3;
 	border-color: #dddddd;
+}
+label.label {
+	font-family: sans-serif;
+	font-weight: 700;
 }
 .header .ui-title {
 	font-family: sans-serif;
