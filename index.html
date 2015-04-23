@@ -26,6 +26,7 @@
 				<ul data-role="listview">
 					<li data-icon="delete"><a href="#" data-rel="close">Close</a></li>
 					<li data-icon="gear"><a href="#options">Options</a></li>
+					<li data-icon="calendar"><a href="#events">Events</a></li>
 					<li data-icon="info"><a href="#about">About</a></li>
 				</ul>
 			</div>
@@ -36,27 +37,27 @@
 			</div>
 
 			<div class="timers">
-				<div class="gym title padded centered">Time to Gym</div>
+				<div class="gym title padded centered">Go to Gym in</div>
 				<div class="gym timer centered gray">
 					<div class="time">--:--:--</div>
 				</div>
 
-				<div class="drink title padded centered">Time to Drink</div>
+				<div class="drink title padded centered">Drink water in</div>
 				<div class="drink timer centered gray">
 					<div class="time">--:--:--</div>
 				</div>
 
 				<div class="event title padded centered">Upcoming events</div>
 				<div class="event name centered gray">
-					<div class="text">-</div>
+					<div class="name">-</div>
 				</div>
 				<div class="event timer centered gray">
-					<div class="time">--:--:--</div>
+					<div class="date">--:--:--</div>
 				</div>
+			</div>
 
-				<div data-role="popup" class="timers popup ui-content centered" data-position-to=".drink.timer .time">
-					<span class="label ui-btn ui-icon-alert ui-btn-icon-left ui-corner-all">{Placeholder}</span>
-				</div>
+			<div data-role="popup" class="timers popup ui-content centered" data-position-to=".drink.timer .time">
+				<span class="label ui-btn ui-icon-alert ui-btn-icon-left ui-corner-all">{Placeholder}</span>
 			</div>
 
 			<div data-role="footer" class="footer ui-footer-fixed">
@@ -74,12 +75,12 @@
 
 			<div class="options">
 				<div class="ui-field-contain padded-sides">
-					<label class="label" for="gymTimeInput">Gym time (HH:mm:ss)</label>
-					<input class="gray" type="text" name="gym-time-input" id="gymTimeInput" placeholder="Enter date" value="--:--:--"/>
+					<label class="label" for="gymTimeInput">Go to Gym at</label>
+					<input class="gray" type="text" name="gym-time-input" id="gymTimeInput" placeholder="Gym time (HH:mm:ss)" value=""/>
 				</div>
 				<div class="ui-field-contain padded-sides">
-					<label class="label" for="drinkTimeInput">Drink every (mm)</label>
-					<input class="gray" type="text" name="gym-time-input" id="drinkTimeInput" placeholder="Enter date" value="--"/>
+					<label class="label" for="drinkTimeInput">Drink water every</label>
+					<input class="gray" type="text" name="gym-time-input" id="drinkTimeInput" placeholder="Drink minute (HH:mm:ss)" value="--"/>
 				</div>
 			</div>
 
@@ -88,6 +89,50 @@
 			</div>
 
 			<div data-role="popup" class="save fail popup ui-content centered" data-position-to=".options">
+				<span class="label ui-btn ui-icon-delete ui-btn-icon-left ui-corner-all">{Placeholder}</span>
+			</div>
+
+			<div data-role="footer" class="footer ui-footer-fixed">
+				<h1 class="gray">Copyright 2015</h1>
+			</div>
+		</div>
+
+		<!-- Options page -->
+		<div data-role="page" id="events">
+			<div data-role="header" class="header">
+				<h1>Events</h1>
+				<a href="#main" class="ui-btn ui-icon-carat-l ui-btn-icon-left ui-corner-all ui-btn-icon-notext"></a>
+				<a id="addEventLink" href="#" class="ui-btn ui-icon-plus ui-btn-icon-right ui-corner-all ui-btn-icon-notext"></a>
+			</div>
+
+			<div class="events">
+				<div class="ui-field-contain padded-sides">
+					<label class="label" for="gymTimeInput">Event name</label>
+					<input class="gray" type="text" name="gym-time-input" id="eventNameInput" placeholder="Event name" value=""/>
+				</div>
+				<div class="ui-field-contain padded-sides">
+					<label class="label" for="drinkTimeInput">Event date</label>
+					<input class="gray" type="text" name="gym-time-input" id="eventDateInput" placeholder="Event date (MM-DD-YYYY HH:mm:ss)" value=""/>
+				</div>
+				<div class="event title padded centered">Future events</div>
+				<div id="eventsHolder" class="ui-grid-a">
+					<!-- Template-->
+					<div class="hidden" id="eventTemplate">
+						<div class="ui-block-a padded-sides event name gray">
+							<div class="name"></div>
+						</div>
+						<div class="ui-block-b padded-sides event timer gray">
+							<div class="date"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div data-role="popup" class="add success popup ui-content centered" data-position-to=".events">
+				<span class="label ui-btn ui-icon-check ui-btn-icon-left ui-corner-all">Added successfully</span>
+			</div>
+
+			<div data-role="popup" class="add fail popup ui-content centered" data-position-to=".events">
 				<span class="label ui-btn ui-icon-delete ui-btn-icon-left ui-corner-all">{Placeholder}</span>
 			</div>
 
