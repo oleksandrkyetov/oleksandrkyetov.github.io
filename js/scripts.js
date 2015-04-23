@@ -40,8 +40,8 @@ $(document).ready(function() {
 	var logFoodNameSpan = $('#logFoodNameSpan');
 	var logFoodDateInput = $('#logFoodDateInput');
 	var logFoodTimeInput = $('#logFoodTimeInput');
-	var foodLogPopupSuccess = $('.food.log.popup.success');
-	var foodLogPopupFail = $('.food.log.popup.fail');
+	var foodLogPopupSuccess = $('.fooditem.log.popup.success');
+	var foodLogPopupFail = $('.fooditem.log.popup.fail');
 
 	var foodHolder = $('#foodHolder');
 	var foodTemplate = $('#foodTemplate');
@@ -49,15 +49,25 @@ $(document).ready(function() {
 	var foodAddLink = $('#foodAddLink');
 	var foodNameInput = $('#foodNameInput');
 	var foodCaloriesInput = $('#foodCaloriesInput');
-	var foodAddPopupSuccess = $('.food.add.popup.success');
-	var foodAddPopupFail = $('.food.add.popup.fail');
+	var foodAddPopupSuccess = $('.fooditem.add.popup.success');
+	var foodAddPopupFail = $('.fooditem.add.popup.fail');
 
-	var weightInput = $('#weightInput');
-	var heightInput = $('#heightInput');
-	var calculateLink = $('#calculateLink');
+	var bmiWeightInput = $('#bmiWeightInput');
+	var bmiHeightInput = $('#bmiHeightInput');
+	var bmiCalculateLink = $('#bmiCalculateLink');
 	var bmiPopupSuccess = $('.bmi.popup.success');
 	var bmiPopupFail = $('.bmi.popup.fail');
 	var bmiSpan = $('#bmiSpan');
+
+	var caloriesAgeInput = $('#caloriesAgeInput');
+	var caloriesGenderRadio = $('#caloriesGenderRadio');
+	var caloriesWeightInput = $('#caloriesWeightInput');
+	var caloriesHeightInput = $('#caloriesHeightInput');
+	var caloriesActivityRadio = $('#caloriesActivityRadio');
+	var caloriesCalculateLink = $('#caloriesCalculateLink');
+	var caloriesPopupSuccess = $('.calories.popup.success');
+	var caloriesPopupFail = $('.calories.popup.fail');
+	var caloriesSpan = $('#caloriesSpan');
 
 	var updateLogSelect = function() {
 		logFoodNameSelect.children().remove();
@@ -221,38 +231,38 @@ $(document).ready(function() {
 		});
 	});
 
-	calculateLink.on('click', function() {
-		if (!weightInput.val().length || !$.isNumeric(weightInput.val()) || weightInput.val() < 0) {
+	bmiCalculateLink.on('click', function() {
+		if (!bmiWeightInput.val().length || !$.isNumeric(bmiWeightInput.val()) || bmiWeightInput.val() < 0) {
 			bmiPopupFail.find('span').html('Weight should be greater than 0 ...');
 			bmiPopupFail.popup('open', {});
 			return;
 		}
 
-		if (!heightInput.val().length || !$.isNumeric(heightInput.val()) || heightInput.val() < 0) {
+		if (!bmiHeightInput.val().length || !$.isNumeric(bmiHeightInput.val()) || bmiHeightInput.val() < 0) {
 			bmiPopupFail.find('span').html('Height should be greater than 0 ...');
 			bmiPopupFail.popup('open', {});
 			return;
 		}
 
 		var result = {};
-		var weight = weightInput.val();
-		var height = heightInput.val();
+		var weight = bmiWeightInput.val();
+		var height = bmiHeightInput.val();
 
-		result.index = weight / (height / 100 * height / 100);
-		if(result.index < 18.5){
+		result.bmi = weight / (height / 100 * height / 100);
+		if(result.bmi < 18.5){
 			result.message = 'You are too thin';
 			result.conclusion = false;
 		}
-		if(result.index > 18.5 && result.index < 25){
+		if(result.bmi > 18.5 && result.bmi < 25){
 			result.message = "You are healthy";
 			result.conclusion = true;
 		}
-		if(result.index > 25){
+		if(result.bmi > 25){
 			result.message = "You are overweight";
 			result.conclusion = false;
 		}
 
-		bmiSpan.html('Your BMI index is ' + result.index.toFixed(5));
+		bmiSpan.html('Your BMI is ' + result.bmi.toFixed(5));
 		bmiSpan.parent().removeClass('hidden');
 
 		if (result.conclusion) {
@@ -262,6 +272,55 @@ $(document).ready(function() {
 			bmiPopupFail.find('span').html(result.message);
 			bmiPopupFail.popup('open', {});
 		}
+	});
+
+	caloriesCalculateLink.on('click', function() {
+		if (!caloriesAgeInput.val().length || !$.isNumeric(caloriesAgeInput.val()) || caloriesAgeInput.val() < 0) {
+			caloriesPopupFail.find('span').html('Age should be greater than 0 ...');
+			caloriesPopupFail.popup('open', {});
+			return;
+		}
+
+		if (!caloriesGenderRadio.find('input:checked').val() || !caloriesGenderRadio.find('input:checked').val().length) {
+			caloriesPopupFail.find('span').html('Gender should be specified ...');
+			caloriesPopupFail.popup('open', {});
+			return;
+		}
+
+		if (!caloriesWeightInput.val().length || !$.isNumeric(caloriesWeightInput.val()) || caloriesWeightInput.val() < 0) {
+			caloriesPopupFail.find('span').html('Weight should be greater than 0 ...');
+			caloriesPopupFail.popup('open', {});
+			return;
+		}
+
+		if (!caloriesHeightInput.val().length || !$.isNumeric(caloriesHeightInput.val()) || caloriesHeightInput.val() < 0) {
+			caloriesPopupFail.find('span').html('Height should be greater than 0 ...');
+			caloriesPopupFail.popup('open', {});
+			return;
+		}
+
+		if (!caloriesActivityRadio.find('input:checked').val() || !caloriesActivityRadio.find('input:checked').val().length) {
+			caloriesPopupFail.find('span').html('Activity should be specified ...');
+			caloriesPopupFail.popup('open', {});
+			return;
+		}
+
+		var result = {};
+		var age = caloriesAgeInput.val();
+		var gender = caloriesGenderRadio.find('input:checked').val();
+		var weight = caloriesWeightInput.val();
+		var height = caloriesHeightInput.val();
+		var activity = caloriesActivityRadio.find('input:checked').val();
+
+		result.bmr = 10 * weight + 6.25 * height - 5 * age;
+		result.bmr = 'M' == gender ? result.bmr + 5 : result.bmr - 161;7
+		result.bmr *= activity;
+
+		caloriesSpan.html('Your BMR is ' + result.bmr.toFixed(5));
+		caloriesSpan.parent().removeClass('hidden');
+
+		// Scroll all the way down
+		$.mobile.silentScroll($(document).height());
 	});
 
 	// Check if options is already in database

@@ -35,12 +35,13 @@
 				<ul data-role="listview">
 					<li data-icon="delete"><a href="#" data-rel="close">Close</a></li>
 					<li data-icon="gear"><a href="#database">Food database</a></li>
-					<li data-icon="grid"><a href="#calculator">Calculator</a></li>
+					<li data-icon="grid"><a href="#bmiCalculator">BMI calculator</a></li>
+					<li data-icon="grid"><a href="#caloriesCalculator">Calories calculator</a></li>
 					<li data-icon="info"><a href="#about">About</a></li>
 				</ul>
 			</div>
 
-			<div data-role="header" class="header">
+			<div data-role="header" class="header ui-header-fixed">
 				<h1>Diary</h1>
 				<a href="#menu" class="ui-btn ui-icon-bars ui-btn-icon-left ui-corner-all ui-btn-icon-notext"></a>
 				<a id="logAddLink" href="#" class="ui-btn ui-icon-plus ui-btn-icon-right ui-corner-all ui-btn-icon-notext"></a>
@@ -83,11 +84,11 @@
 				</div>
 			</div>
 
-			<div data-role="popup" class="food log add popup success ui-content centered" data-position-to=".logs">
+			<div data-role="popup" class="fooditem log popup success ui-content centered" data-position-to=".logs">
 				<span class="label ui-btn ui-icon-check ui-btn-icon-left ui-corner-all">Logged successfully</span>
 			</div>
 
-			<div data-role="popup" class="food log add popup fail ui-content centered" data-position-to=".logs">
+			<div data-role="popup" class="fooditem log popup fail ui-content centered" data-position-to=".logs">
 				<span class="label ui-btn ui-icon-delete ui-btn-icon-left ui-corner-all">{Placeholder}</span>
 			</div>
 
@@ -98,7 +99,7 @@
 
 		<!-- Database page -->
 		<div data-role="page" id="database">
-			<div data-role="header" class="header">
+			<div data-role="header" class="header ui-header-fixed">
 				<h1>Database</h1>
 				<a href="#main" class="ui-btn ui-icon-carat-l ui-btn-icon-left ui-corner-all ui-btn-icon-notext"></a>
 				<a id="foodAddLink" href="#" class="ui-btn ui-icon-plus ui-btn-icon-right ui-corner-all ui-btn-icon-notext"></a>
@@ -114,14 +115,14 @@
 					<input class="gray" type="text" name="food-calories-input" id="foodCaloriesInput" placeholder="Calories in 100g" value=""/>
 				</div>
 
-				<div class="food title padded centered">All food</div>
+				<div class="fooditem title padded centered">All food</div>
 				<div id="foodHolder" class="ui-grid-a">
 					<!-- Template -->
 					<div class="hidden" id="foodTemplate">
-						<div class="ui-block-a padded-sides food name gray">
+						<div class="ui-block-a padded-sides fooditem name gray">
 							<div class="name">Name</div>
 						</div>
-						<div class="ui-block-b padded-sides food date gray">
+						<div class="ui-block-b padded-sides fooditem date gray">
 							<div class="calories">Calories</div>
 						</div>
 					</div>
@@ -134,11 +135,11 @@
 				</div>
 			</div>
 
-			<div data-role="popup" class="food add popup success ui-content centered" data-position-to=".food">
+			<div data-role="popup" class="fooditem add popup success ui-content centered" data-position-to=".food">
 				<span class="label ui-btn ui-icon-check ui-btn-icon-left ui-corner-all">Added successfully</span>
 			</div>
 
-			<div data-role="popup" class="food add popup fail ui-content centered" data-position-to=".food">
+			<div data-role="popup" class="fooditem add popup fail ui-content centered" data-position-to=".food">
 				<span class="label ui-btn ui-icon-delete ui-btn-icon-left ui-corner-all">{Placeholder}</span>
 			</div>
 
@@ -147,33 +148,98 @@
 			</div>
 		</div>
 
-		<!-- Calculator page -->
-		<div data-role="page" id="calculator">
-			<div data-role="header" class="header">
-				<h1>Calculator</h1>
+		<!-- BMI calculator page -->
+		<div data-role="page" id="bmiCalculator">
+			<div data-role="header" class="header ui-header-fixed">
+				<h1>BMI Calculator</h1>
 				<a href="#main" class="ui-btn ui-icon-carat-l ui-btn-icon-left ui-corner-all ui-btn-icon-notext"></a>
-				<a id="calculateLink" href="#" class="ui-btn ui-icon-recycle ui-btn-icon-right ui-corner-all ui-btn-icon-notext"></a>
+				<a id="bmiCalculateLink" href="#" class="ui-btn ui-icon-recycle ui-btn-icon-right ui-corner-all ui-btn-icon-notext"></a>
 			</div>
 
-			<div class="calculator">
+			<div class="bmi-calculator">
 				<div class="ui-field-contain padded-sides">
-					<label class="label" for="weightInput">Weight (kg)</label>
-					<input class="gray" type="text" name="food-name-input" id="weightInput" placeholder="Your weight in kg" value=""/>
+					<label class="label" for="bmiWeightInput">Weight (kg)</label>
+					<input class="gray" type="text" name="bmi-weight-input" id="bmiWeightInput" placeholder="Your weight in kg" value=""/>
 				</div>
 				<div class="ui-field-contain padded-sides">
-					<label class="label" for="heightInput">Height (cm)</label>
-					<input class="gray" type="text" name="food-calories-input" id="heightInput" placeholder="Your height in cm" value=""/>
+					<label class="label" for="bmiHeightInput">Height (cm)</label>
+					<input class="gray" type="text" name="bmi-height-input" id="bmiHeightInput" placeholder="Your height in cm" value=""/>
 				</div>
 				<div class="hidden ui-field-contain padded-sides">
 					<span class="gray label ui-btn ui-corner-all" id="bmiSpan">{BMI Placeholder}</span>
 				</div>
 			</div>
 
-			<div data-role="popup" class="bmi success popup ui-content centered" data-position-to=".calculator">
+			<div data-role="popup" class="bmi success popup ui-content centered" data-position-to=".bmi-calculator">
 				<span class="label ui-btn ui-icon-check ui-btn-icon-left ui-corner-all">{Placeholder}</span>
 			</div>
 
-			<div data-role="popup" class="bmi fail popup ui-content centered" data-position-to=".calculator">
+			<div data-role="popup" class="bmi fail popup ui-content centered" data-position-to=".bmi-calculator">
+				<span class="label ui-btn ui-icon-delete ui-btn-icon-left ui-corner-all">{Placeholder}</span>
+			</div>
+
+			<div data-role="footer" class="footer ui-footer-fixed">
+				<h1 class="gray">Copyright 2015</h1>
+			</div>
+		</div>
+
+		<!-- Calories calculator page -->
+		<div data-role="page" id="caloriesCalculator">
+			<div data-role="header" class="header ui-header-fixed">
+				<h1>Calories Calculator</h1>
+				<a href="#main" class="ui-btn ui-icon-carat-l ui-btn-icon-left ui-corner-all ui-btn-icon-notext"></a>
+				<a id="caloriesCalculateLink" href="#" class="ui-btn ui-icon-recycle ui-btn-icon-right ui-corner-all ui-btn-icon-notext"></a>
+			</div>
+
+			<div class="calories-calculator">
+				<div class="ui-field-contain padded-sides">
+					<label class="label" for="caloriesAgeInput">Age</label>
+					<input class="gray" type="text" name="calories-age-input" id="caloriesAgeInput" placeholder="Your age in full years" value=""/>
+				</div>
+				<div class="ui-field-contain padded-sides">
+					<fieldset data-role="controlgroup" id="caloriesGenderRadio">
+						<legend class="label">Gender</legend>
+						<input type="radio" name="calories-gender-radio" id="caloriesGenderRadio1" value="M" checked="checked" />
+						<label class="gray" for="caloriesGenderRadio1">Male</label>
+						<input type="radio" name="calories-gender-radio" id="caloriesGenderRadio2" value="F" />
+						<label class="gray" for="caloriesGenderRadio2">Female</label>
+					</fieldset>
+				</div>
+				<div class="ui-field-contain padded-sides">
+					<label class="label" for="caloriesWeightInput">Weight (kg)</label>
+					<input class="gray" type="text" name="calories-height-input" id="caloriesWeightInput" placeholder="Your weight in kg" value=""/>
+				</div>
+				<div class="ui-field-contain padded-sides">
+					<label class="label" for="caloriesHeightInput">Height (cm)</label>
+					<input class="gray" type="text" name="calories-weight-input" id="caloriesHeightInput" placeholder="Your height in cm" value=""/>
+				</div>
+				<div class="ui-field-contain padded-sides">
+					<fieldset data-role="controlgroup" id="caloriesActivityRadio">
+						<legend class="label">Gender</legend>
+						<input type="radio" name="calories-activity-radio" id="caloriesActivityRadio1" value="1" checked="checked" />
+						<label class="gray" for="caloriesActivityRadio1">Basal Metabolic Rate</label>
+						<input type="radio" name="calories-activity-radio" id="caloriesActivityRadio2" value="1.2" />
+						<label class="gray" for="caloriesActivityRadio2">Little or not excercise</label>
+						<input type="radio" name="calories-activity-radio" id="caloriesActivityRadio3" value="1.375" />
+						<label class="gray" for="caloriesActivityRadio3">Lightly Active</label>
+						<input type="radio" name="calories-activity-radio" id="caloriesActivityRadio4" value="1.55" />
+						<label class="gray" for="caloriesActivityRadio4">Moderately Active</label>
+						<input type="radio" name="calories-activity-radio" id="caloriesActivityRadio5" value="1.725" />
+						<label class="gray" for="caloriesActivityRadio5">Very Active</label>
+						<input type="radio" name="calories-activity-radio" id="caloriesActivityRadio6" value="1.9" />
+						<label class="gray" for="caloriesActivityRadio6">Extra Active</label>
+					</fieldset>
+				</div>
+				<div class="hidden ui-field-contain padded-sides">
+					<span class="gray label ui-btn ui-corner-all" id="caloriesSpan">{Calories Placeholder}</span>
+				</div>
+			</div>
+
+			<div data-role="popup" class="calories success popup ui-content centered" data-position-to=".calories-calculator">
+				<span class="label ui-btn ui-icon-check ui-btn-icon-left ui-corner-all">{Placeholder}</span>
+			</div>
+
+			<div data-role="popup" class="calories fail popup ui-content centered" data-position-to=".calories-calculator">
 				<span class="label ui-btn ui-icon-delete ui-btn-icon-left ui-corner-all">{Placeholder}</span>
 			</div>
 
@@ -184,7 +250,7 @@
 
 		<!-- About page -->
 		<div data-role="page" id="about">
-			<div data-role="header" class="header">
+			<div data-role="header" class="header ui-header-fixed">
 				<h1>About</h1>
 				<a href="#main" class="ui-btn ui-icon-carat-l ui-btn-icon-left ui-corner-all ui-btn-icon-notext"></a>
 			</div>

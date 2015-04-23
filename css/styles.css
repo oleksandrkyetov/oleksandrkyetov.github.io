@@ -34,6 +34,10 @@ label.label {
 	font-family: sans-serif;
 	font-weight: 700;
 }
+legend.label {
+	font-family: sans-serif;
+	font-weight: 700;
+}
 .header .ui-title {
 	font-family: sans-serif;
 	font-weight: 900;
@@ -52,4 +56,24 @@ label.label {
 }
 .hidden {
 	display: none;
+}
+.calories-calculator {
+	padding-top: 50px;
+	padding-bottom: 50px;
+}
+.logs {
+	padding-top: 50px;
+	padding-bottom: 50px;
+}
+.food {
+	padding-top: 50px;
+	padding-bottom: 50px;
+}
+.bmi-calculator {
+	padding-top: 50px;
+	padding-bottom: 50px;
+}
+.about {
+	padding-top: 50px;
+	padding-bottom: 50px;
 }
