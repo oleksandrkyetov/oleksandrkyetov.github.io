@@ -1,13 +1,16 @@
 <!doctype html>
 <html>
 	<head>
-		<title>My Page</title>
+		<title>body-mass-index-calculator</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 
 		<!-- JQuery Mobile styles -->
 		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.css">
+		<!-- JQuery Mobile datebox -->
+		<link rel="stylesheet" type="text/css" href="http://cdn.jtsage.com/datebox/latest/jqm-datebox.min.css">
 		<!-- Custom styles -->
 		<link rel="stylesheet" href="css/styles.css">
+
 
 		<!-- PouchDB -->
 		<script src="http://cdn.jsdelivr.net/pouchdb/3.4.0/pouchdb.min.js"></script>
@@ -15,6 +18,12 @@
 		<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
 		<!-- JQuery -->
 		<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.js"></script>
+		<!-- JQuery Mobile datebox -->
+		<script type="text/javascript" src="http://cdn.jtsage.com/datebox/latest/jqm-datebox.core.min.js"></script>
+		<!-- JQuery Mobile datebox DateBox / TimeBox / DurationBox -->
+		<script type="text/javascript" src="http://dev.jtsage.com/cdn/datebox/latest/jqm-datebox.mode.datebox.min.js"></script>
+		<!-- JQuery Mobile datebox FlipBox / TimeFlipBox / DurationFlipBox -->
+		<script type="text/javascript" src="http://dev.jtsage.com/cdn/datebox/latest/jqm-datebox.mode.flipbox.min.js"></script>
 		<!-- Moment.js for time manipulation -->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.2/moment-with-locales.js"></script>
 		<!-- Custom script -->
@@ -25,70 +34,60 @@
 			<div data-role="panel" data-display="overlay" id="menu">
 				<ul data-role="listview">
 					<li data-icon="delete"><a href="#" data-rel="close">Close</a></li>
-					<li data-icon="gear"><a href="#options">Options</a></li>
-					<li data-icon="calendar"><a href="#events">Events</a></li>
+					<li data-icon="gear"><a href="#database">Food database</a></li>
+					<li data-icon="grid"><a href="#calculator">Calculator</a></li>
 					<li data-icon="info"><a href="#about">About</a></li>
 				</ul>
 			</div>
 
 			<div data-role="header" class="header">
+				<h1>Diary</h1>
 				<a href="#menu" class="ui-btn ui-icon-bars ui-btn-icon-left ui-corner-all ui-btn-icon-notext"></a>
-				<h1>Planner</h1>
+				<a id="logAddLink" href="#" class="ui-btn ui-icon-plus ui-btn-icon-right ui-corner-all ui-btn-icon-notext"></a>
 			</div>
 
-			<div class="timers">
-				<div class="gym title padded centered">Go to Gym in</div>
-				<div class="gym timer centered gray">
-					<div class="time">--:--:--</div>
-				</div>
-
-				<div class="drink title padded centered">Drink water in</div>
-				<div class="drink timer centered gray">
-					<div class="time">--:--:--</div>
-				</div>
-
-				<div class="event title padded centered">Upcoming events</div>
-				<div class="event name centered gray">
-					<div class="name">-</div>
-				</div>
-				<div class="event timer centered gray">
-					<div class="date">--:--:--</div>
-				</div>
-			</div>
-
-			<div data-role="popup" class="timers popup ui-content centered" data-position-to=".drink.timer .time">
-				<span class="label ui-btn ui-icon-alert ui-btn-icon-left ui-corner-all">{Placeholder}</span>
-			</div>
-
-			<div data-role="footer" class="footer ui-footer-fixed">
-				<h1 class="gray">Copyright 2015</h1>
-			</div>
-		</div>
-
-		<!-- Options page -->
-		<div data-role="page" id="options">
-			<div data-role="header" class="header">
-				<h1>Options</h1>
-				<a href="#main" class="ui-btn ui-icon-carat-l ui-btn-icon-left ui-corner-all ui-btn-icon-notext"></a>
-				<a id="saveOptionsLink" href="#" class="ui-btn ui-icon-check ui-btn-icon-right ui-corner-all ui-btn-icon-notext"></a>
-			</div>
-
-			<div class="options">
+			<div class="logs">
 				<div class="ui-field-contain padded-sides">
-					<label class="label" for="gymTimeInput">Go to Gym at</label>
-					<input class="gray" type="text" name="gym-time-input" id="gymTimeInput" placeholder="Gym time (HH:mm:ss)" value=""/>
+					<label class="label" for="logFoodNameSelect">Food name</label>
+					<select class="gray" name="log-food-name-input" id="logFoodNameSelect"></select>
+					<span class="hidden gray label ui-btn ui-icon-delete ui-btn-icon-left ui-corner-all" id="logFoodNameSpan">No food in database ...</span>
 				</div>
 				<div class="ui-field-contain padded-sides">
-					<label class="label" for="drinkTimeInput">Drink water every</label>
-					<input class="gray" type="text" name="gym-time-input" id="drinkTimeInput" placeholder="Drink minute (HH:mm:ss)" value="--"/>
+					<label class="label" for="logFoodDateInput">Date</label>
+					<input class="gray" type="text" name="log-food-date-input" id="logFoodDateInput" data-role="datebox" placeholder="MM-DD-YYYY"
+					       data-options='{"mode": "flipbox", "popupPosition": "window", "overrideDateFormat": "%m-%d-%Y", "showInitialValue": "true"}' />
+				</div>
+				<div class="ui-field-contain padded-sides">
+					<label class="label" for="logFoodTimeInput">Time</label>
+					<input class="gray" type="text" name="log-food-time-input" id="logFoodTimeInput" data-role="datebox" placeholder="HH:mm"
+					       data-options='{"mode": "timeflipbox", "popupPosition": "window", "overrideDateFormat": "%H:%M", "showInitialValue": "true"}' />
+				</div>
+
+				<div class="log title padded centered">Logged food</div>
+				<div id="logsHolder" class="ui-grid-a">
+					<!-- Template -->
+					<div class="hidden" id="logTemplate">
+						<div class="ui-block-a padded-sides log name gray">
+							<div class="name">Name</div>
+						</div>
+						<div class="ui-block-b padded-sides log date gray">
+							<div class="dateTime">Date</div>
+						</div>
+					</div>
+					<!-- Template failure -->
+					<div class="hidden" id="logTemplateFailure">
+						<div class="centered gray">
+							<div class="name">Name</div>
+						</div>
+					</div>
 				</div>
 			</div>
 
-			<div data-role="popup" class="save success popup ui-content centered" data-position-to=".options">
-				<span class="label ui-btn ui-icon-check ui-btn-icon-left ui-corner-all">Saved successfully</span>
+			<div data-role="popup" class="food log add popup success ui-content centered" data-position-to=".logs">
+				<span class="label ui-btn ui-icon-check ui-btn-icon-left ui-corner-all">Logged successfully</span>
 			</div>
 
-			<div data-role="popup" class="save fail popup ui-content centered" data-position-to=".options">
+			<div data-role="popup" class="food log add popup fail ui-content centered" data-position-to=".logs">
 				<span class="label ui-btn ui-icon-delete ui-btn-icon-left ui-corner-all">{Placeholder}</span>
 			</div>
 
@@ -97,42 +96,84 @@
 			</div>
 		</div>
 
-		<!-- Options page -->
-		<div data-role="page" id="events">
+		<!-- Database page -->
+		<div data-role="page" id="database">
 			<div data-role="header" class="header">
-				<h1>Events</h1>
+				<h1>Database</h1>
 				<a href="#main" class="ui-btn ui-icon-carat-l ui-btn-icon-left ui-corner-all ui-btn-icon-notext"></a>
-				<a id="addEventLink" href="#" class="ui-btn ui-icon-plus ui-btn-icon-right ui-corner-all ui-btn-icon-notext"></a>
+				<a id="foodAddLink" href="#" class="ui-btn ui-icon-plus ui-btn-icon-right ui-corner-all ui-btn-icon-notext"></a>
 			</div>
 
-			<div class="events">
+			<div class="food">
 				<div class="ui-field-contain padded-sides">
-					<label class="label" for="gymTimeInput">Event name</label>
-					<input class="gray" type="text" name="gym-time-input" id="eventNameInput" placeholder="Event name" value=""/>
+					<label class="label" for="foodNameInput">Food name</label>
+					<input class="gray" type="text" name="food-name-input" id="foodNameInput" placeholder="Food name" value=""/>
 				</div>
 				<div class="ui-field-contain padded-sides">
-					<label class="label" for="drinkTimeInput">Event date</label>
-					<input class="gray" type="text" name="gym-time-input" id="eventDateInput" placeholder="Event date (MM-DD-YYYY HH:mm:ss)" value=""/>
+					<label class="label" for="foodCaloriesInput">Calories (100g)</label>
+					<input class="gray" type="text" name="food-calories-input" id="foodCaloriesInput" placeholder="Calories in 100g" value=""/>
 				</div>
-				<div class="event title padded centered">Future events</div>
-				<div id="eventsHolder" class="ui-grid-a">
-					<!-- Template-->
-					<div class="hidden" id="eventTemplate">
-						<div class="ui-block-a padded-sides event name gray">
-							<div class="name"></div>
+
+				<div class="food title padded centered">All food</div>
+				<div id="foodHolder" class="ui-grid-a">
+					<!-- Template -->
+					<div class="hidden" id="foodTemplate">
+						<div class="ui-block-a padded-sides food name gray">
+							<div class="name">Name</div>
 						</div>
-						<div class="ui-block-b padded-sides event timer gray">
-							<div class="date"></div>
+						<div class="ui-block-b padded-sides food date gray">
+							<div class="calories">Calories</div>
+						</div>
+					</div>
+					<!-- Template failure -->
+					<div class="hidden" id="foodTemplateFailure">
+						<div class="centered gray">
+							<div class="name">Name</div>
 						</div>
 					</div>
 				</div>
 			</div>
 
-			<div data-role="popup" class="add success popup ui-content centered" data-position-to=".events">
+			<div data-role="popup" class="food add popup success ui-content centered" data-position-to=".food">
 				<span class="label ui-btn ui-icon-check ui-btn-icon-left ui-corner-all">Added successfully</span>
 			</div>
 
-			<div data-role="popup" class="add fail popup ui-content centered" data-position-to=".events">
+			<div data-role="popup" class="food add popup fail ui-content centered" data-position-to=".food">
+				<span class="label ui-btn ui-icon-delete ui-btn-icon-left ui-corner-all">{Placeholder}</span>
+			</div>
+
+			<div data-role="footer" class="footer ui-footer-fixed">
+				<h1 class="gray">Copyright 2015</h1>
+			</div>
+		</div>
+
+		<!-- Calculator page -->
+		<div data-role="page" id="calculator">
+			<div data-role="header" class="header">
+				<h1>Calculator</h1>
+				<a href="#main" class="ui-btn ui-icon-carat-l ui-btn-icon-left ui-corner-all ui-btn-icon-notext"></a>
+				<a id="calculateLink" href="#" class="ui-btn ui-icon-recycle ui-btn-icon-right ui-corner-all ui-btn-icon-notext"></a>
+			</div>
+
+			<div class="calculator">
+				<div class="ui-field-contain padded-sides">
+					<label class="label" for="weightInput">Weight (kg)</label>
+					<input class="gray" type="text" name="food-name-input" id="weightInput" placeholder="Your weight in kg" value=""/>
+				</div>
+				<div class="ui-field-contain padded-sides">
+					<label class="label" for="heightInput">Height (cm)</label>
+					<input class="gray" type="text" name="food-calories-input" id="heightInput" placeholder="Your height in cm" value=""/>
+				</div>
+				<div class="hidden ui-field-contain padded-sides">
+					<span class="gray label ui-btn ui-corner-all" id="bmiSpan">{BMI Placeholder}</span>
+				</div>
+			</div>
+
+			<div data-role="popup" class="bmi success popup ui-content centered" data-position-to=".calculator">
+				<span class="label ui-btn ui-icon-check ui-btn-icon-left ui-corner-all">{Placeholder}</span>
+			</div>
+
+			<div data-role="popup" class="bmi fail popup ui-content centered" data-position-to=".calculator">
 				<span class="label ui-btn ui-icon-delete ui-btn-icon-left ui-corner-all">{Placeholder}</span>
 			</div>
 
