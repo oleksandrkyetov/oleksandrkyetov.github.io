@@ -1123,12 +1123,12 @@
 		}
 
 		a:hover {
-			color: #ed786a;
+			color: #00247d;
 			border-bottom-color: rgba(255, 255, 255, 0);
 		}
 
 			a:hover strong {
-				color: #ed786a;
+				color: #00247d;
 			}
 
 	strong, b {
@@ -1451,7 +1451,7 @@
 		-webkit-appearance: none;
 		position: relative;
 		display: inline-block;
-		background: #ed786a;
+		background: #00247d;
 		color: #fff !important;
 		text-transform: uppercase;
 		border-radius: 4px;
@@ -1487,7 +1487,7 @@
 		input[type="reset"]:active,
 		button:active,
 		.button:active {
-			background: #ed786a;
+			background: #00247d;
 		}
 
 		input[type="button"].alt,
@@ -1641,7 +1641,7 @@
 #header-nav h1 {
 	font-family: 'Arvo';
 	font-weight: 700;
-	color: #ed786a;
+	color: #00247d;
 	text-shadow: 0.05em 0.075em 0 rgba(0, 0, 0, 0.1);
 }
 #header-nav h1 a {
@@ -1660,7 +1660,7 @@
 #header-logo h1 {
 	font-family: 'Arvo';
 	font-weight: 700;
-	color: #ed786a;
+	color: #00247d;
 	text-shadow: 0.05em 0.075em 0 rgba(0, 0, 0, 0.1);
 }
 #header-logo h1 a {
@@ -1714,12 +1714,12 @@
 			}
 
 		#nav > ul > li.active > a:before, #nav > ul > li:hover > a:before {
-			background: #ED786A;
+			background: #00247D;
 			color: #fff;
 		}
 
 		#nav > ul > li.active > a > span, #nav > ul > li:hover > a > span {
-			color: #ED786A;
+			color: #00247D;
 		}
 
 /* Features */
@@ -1991,7 +1991,7 @@
 					-webkit-transition: color 0.25s ease-in-out, border-bottom-color 0.25s ease-in-out;
 					-ms-transition: color 0.25s ease-in-out, border-bottom-color 0.25s ease-in-out;
 					transition: color 0.25s ease-in-out, border-bottom-color 0.25s ease-in-out;
-					color: #ed786a;
+					color: #00247d;
 				}
 
 		/* Banner */
