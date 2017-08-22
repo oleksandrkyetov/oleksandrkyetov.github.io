@@ -1,0 +1,62 @@
+.events, .ranking {
+    padding: 0.4rem 0.4rem 0.4rem 0.4rem;
+}
+
+.event {
+    padding-bottom: 1rem
+}
+
+.score {
+    font-size: 1.2rem;
+}
+
+.winner {
+    color: #0d47a1;
+}
+
+.team-titles {
+    line-height: 2.0rem;
+}
+
+.team-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.team-members {
+    line-height: 1rem;
+}
+
+.team-member {
+    font-size: 0.7rem;
+    font-weight: 400;
+}
+
+.ranking-header {
+    padding: 0;
+    font-weight: 600;
+    line-height: 1.2rem;
+}
+
+.ranking-row {
+    padding: 0;
+    font-weight: 400;
+    line-height: 1.2rem;
+}
+
+.ranking-row-in {
+    color: #000000;
+}
+
+.ranking-row-out {
+    color: #aaaaaa;
+}
+
+.ranking-row-score {
+    text-align: center;
+}
+
+.ranking-row-name, .ranking-row-performance, .ranking-row-score {
+    padding: 0;
+    font-size: 0.8rem;
+}

@@ -1,7 +1,32 @@
-.project-logos{
-    padding: 10px 10px 10px 10px;
+body {
+    color: #666666;
 }
 
-.project-logo {
+.container-fluid, .row {
+    padding: 0;
+    margin: 0;
+}
+
+.project-logos {
+    padding: 0;
+}
+
+.pull-right {
+    float: right;
+}
+
+.pull-text-right {
+    text-align: right;
+}
+
+.pull-left {
+    float: left;
+}
+
+.pull-text-left {
+    text-align: left;
+}
+
+.no-padding {
     padding: 0;
 }
