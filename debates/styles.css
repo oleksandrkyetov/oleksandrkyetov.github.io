@@ -102,19 +102,15 @@
 }
 
 .background {
-    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
+    height: 100vh;
+    opacity: 0.05;
+    position: absolute;
     background-size: contain;
-    background: url('../debates.inenglish.logo.transparent.png') no-repeat center;
+    background: url('../debates.inenglish.logo.png') no-repeat center;
 }
-
-/*body {*/
-    /*background: url('../debates.inenglish.logo.transparent.png') no-repeat center;*/
-    /*background-size: contain;*/
-/*}*/
 
 .ranking-header {
     padding: 0;
