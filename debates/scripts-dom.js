@@ -3,23 +3,23 @@
 $(document).ready(function() {
     var ranking = {
         current: {
-            all: _.map(computations.ranking.compute(datas), mappers.for.ranking)
+            members: computations.events.to.members.compute(events)
         },
         previous: {
-            all: _.map(computations.ranking.compute(_.slice(datas, 0, datas.length - 1)), mappers.for.ranking)
+            members: computations.events.to.members.compute(_.slice(events, 0, events.length - 1))
         }
     };
 
-    ranking.current.in = _.sortBy(_.filter(ranking.current.all, function(item) {
-        return item.rank.total.count >= constants.participations.threshold;
-    }), function(item) {
-        return -1 * item.rank.total.score.average.raw;
+    ranking.current.in = _.sortBy(_.filter(ranking.current.members, function(m) {
+        return m.score.total.raw.length >= constants.participations.threshold;
+    }), function(m) {
+        return -1 * m.score.total.calculated.average;
     });
 
-    ranking.previous.in = _.sortBy(_.filter(ranking.previous.all, function(item) {
-        return item.rank.total.count >= constants.participations.threshold
-    }), function(item) {
-        return -1 * item.rank.total.score.average.raw;
+    ranking.previous.in = _.sortBy(_.filter(ranking.previous.members, function(m) {
+        return m.score.total.raw.length >= constants.participations.threshold;
+    }), function(m) {
+        return -1 * m.score.total.calculated.average;
     });
 
     _.each(ranking.current.in, function(itemCurrent, indexCurrent) {
@@ -27,24 +27,22 @@ $(document).ready(function() {
             return itemPrevious.name === itemCurrent.name;
         });
 
-        itemCurrent.rank.total.performance = {
-            class: computations.performance.classify({
-                current: indexCurrent,
-                previous: indexPrevious
-            })
-        };
+        itemCurrent.rank.performance.total.class = computations.performance.classify({
+            current: indexCurrent,
+            previous: indexPrevious
+        });
     });
 
-    ranking.current.out = _.sortBy(_.filter(ranking.current.all, function(item) {
-        return item.rank.total.count < constants.participations.threshold
-    }), function(item) {
-        return -1 * item.rank.total.score.average.raw;
+    ranking.current.out = _.sortBy(_.filter(ranking.current.members, function(m) {
+        return m.score.total.raw.length < constants.participations.threshold;
+    }), function(m) {
+        return -1 * m.score.total.calculated.average;
     });
 
-    ranking.previous.out = _.sortBy(_.filter(ranking.previous.all, function(item) {
-        return item.rank.total.count < constants.participations.threshold
-    }), function(item) {
-        return -1 * item.rank.total.score.average.raw;
+    ranking.previous.out = _.sortBy(_.filter(ranking.previous.members, function(m) {
+        return m.score.total.raw.length < constants.participations.threshold;
+    }), function(m) {
+        return -1 * m.score.total.calculated.average;
     });
 
     _.each(ranking.current.out, function(itemCurrent, indexCurrent) {
@@ -52,24 +50,13 @@ $(document).ready(function() {
             return itemPrevious.name === itemCurrent.name;
         });
 
-        itemCurrent.rank.total.performance = {
-            class: computations.performance.classify({
-                current: indexCurrent,
-                previous: indexPrevious
-            })
-        };
+        itemCurrent.rank.performance.total.class = computations.performance.classify({
+            current: indexCurrent,
+            previous: indexPrevious
+        });
     });
 
     $('#ranking').html(Handlebars.compile($('#ranking-template').html())({
         ranking: ranking.current
     }));
-
-    // var events = [];
-    // _.each(datas, function(data) {
-    //     events.push(Handlebars.compile($('#australasia-event-template').html())({
-    //         teams: data.teams
-    //     }));
-    //     events.push(Handlebars.compile($('#british-parliamentary-event-template').html())({}));
-    // });
-    // $('#events').html(events);
 });

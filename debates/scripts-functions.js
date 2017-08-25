@@ -7,138 +7,150 @@ var constants = {
 };
 
 var creators = {
-    rank: {
-        create: function () {
+    member: {
+        getOrCreate: function(member) {
+            if (_.isUndefined(member)) {
+                return creators.member.create();
+            }
+
+            return member;
+        },
+        create: function() {
             return {
-                total: {
-                    count: 0,
-                    score: {
-                        original: 0
+                name: '',
+                rank: {
+                    performance: {
+                        total: {
+                            class: undefined
+                        }
                     }
                 },
-                proposition: {
-                    count: 0,
-                    score: {
-                        original: 0
-                    }
-                },
-                opposition: {
-                    count: 0,
-                    score: {
-                        original: 0
+                score: {
+                    total: {
+                        raw: [],
+                        calculated: {
+                            adjusted: undefined,
+                            average: undefined
+                        }
+                    },
+                    proposition: {
+                        raw: [],
+                        calculated: {
+                            adjusted: undefined,
+                            average: undefined
+                        }
+                    },
+                    opposition: {
+                        raw: [],
+                        calculated: {
+                            adjusted: undefined,
+                            average: undefined
+                        }
                     }
                 }
-            }
+            };
         }
     }
 };
 
 var computations = {
-    ranking: {
-        compute: function(datas) {
-            var ranking = {};
-
-            computations.ranking.australasia.compute(_.filter(datas, function(data) {
-                return data.style === 'Australasia'
-            }), ranking);
-
-            computations.ranking.bp.compute(_.filter(datas, function(data) {
-                return data.style === 'British Parliamentary'
-            }), ranking);
-
-            _.each(ranking, function(item) {
-                item.total.score.average = item.total.score.original / item.total.count;
-                item.proposition.score.average = item.proposition.score.original / item.proposition.count;
-                item.opposition.score.average = item.opposition.score.original / item.opposition.count;
-            });
-
-            return ranking;
-        },
-        australasia: {
-            compute: function (datas, ranking) {
-                _.each(datas, function (data) {
-                    var average = (data.teams.proposition.score.original + data.teams.opposition.score.original) / 2;
-
-                    data.teams.proposition.score.adjusted = data.teams.proposition.score.original / average;
-                    _.each(data.teams.proposition.members, function (name) {
-                        if (_.isUndefined(ranking[name])) {
-                            ranking[name] = creators.rank.create();
-                        }
-
-                        ranking[name].total.count += 1;
-                        ranking[name].proposition.count += 1;
-                        ranking[name].total.score.original += data.teams.proposition.score.adjusted;
-                        ranking[name].proposition.score.original += data.teams.proposition.score.adjusted;
-                    });
-
-                    data.teams.opposition.score.adjusted = data.teams.opposition.score.original / average;
-                    _.each(data.teams.opposition.members, function (name) {
-                        if (_.isUndefined(ranking[name])) {
-                            ranking[name] = creators.rank.create();
-                        }
-
-                        ranking[name].total.count += 1;
-                        ranking[name].opposition.count += 1;
-                        ranking[name].total.score.original += data.teams.opposition.score.adjusted;
-                        ranking[name].opposition.score.original += data.teams.opposition.score.adjusted;
-                    });
-                });
+    resolver: {
+        for: function(style) {
+            if (style === 'Australasia') {
+                return computations.events.to.members.australasia;
             }
-        },
-        bp: {
-            compute: function (datas, ranking) {
-                _.each(datas, function(data) {
-                    var average = (data.teams.proposition.opening.score.original + data.teams.proposition.closing.score.original
-                        + data.teams.opposition.opening.score.original + data.teams.opposition.closing.score.original) / 4;
 
-                    data.teams.proposition.opening.score.adjusted = data.teams.proposition.opening.score.original / average;
-                    _.each(data.teams.proposition.opening.members, function(name) {
-                        if (_.isUndefined(ranking[name])) {
-                            ranking[name] = creators.rank.create();
-                        }
+            return computations.events.to.members.bp;
+        }
+    },
+    events: {
+        to: {
+            members: {
+                compute: function(events) {
+                    var members = {};
 
-                        ranking[name].total.count += 1;
-                        ranking[name].proposition.count += 1;
-                        ranking[name].total.score.original += data.teams.proposition.opening.score.adjusted;
-                        ranking[name].proposition.score.original += data.teams.proposition.opening.score.adjusted;
+                    _.each(events, function(e) {
+                        computations.resolver.for(e.style).compute(members, e);
                     });
 
-                    data.teams.proposition.closing.score.adjusted = data.teams.proposition.closing.score.original / average;
-                    _.each(data.teams.proposition.closing.members, function(name) {
-                        if (_.isUndefined(ranking[name])) {
-                            ranking[name] = creators.rank.create();
-                        }
+                    _.each(members, function(m) {
+                        m.score.total.calculated.adjusted = _.sum(m.score.total.raw);
+                        m.score.total.calculated.average = m.score.total.calculated.adjusted / m.score.total.raw.length;
 
-                        ranking[name].total.count += 1;
-                        ranking[name].proposition.count += 1;
-                        ranking[name].total.score.original += data.teams.proposition.closing.score.adjusted;
-                        ranking[name].proposition.score.original += data.teams.proposition.closing.score.adjusted;
+                        m.score.proposition.calculated.adjusted = _.sum(m.score.proposition.raw);
+                        m.score.proposition.calculated.average = m.score.proposition.calculated.adjusted / m.score.proposition.raw.length;
+
+                        m.score.opposition.calculated.adjusted = _.sum(m.score.opposition.raw);
+                        m.score.opposition.calculated.average = m.score.opposition.calculated.adjusted / m.score.opposition.raw.length;
                     });
 
-                    data.teams.opposition.opening.score.adjusted = data.teams.opposition.opening.score.original / average;
-                    _.each(data.teams.opposition.opening.members, function(name) {
-                        if (_.isUndefined(ranking[name])) {
-                            ranking[name] = creators.rank.create();
-                        }
+                    return members;
+                },
+                australasia: {
+                    compute: function(members, event) {
+                        var average = (event.teams.proposition.score + event.teams.opposition.score) / 2;
 
-                        ranking[name].total.count += 1;
-                        ranking[name].opposition.count += 1;
-                        ranking[name].total.score.original += data.teams.opposition.opening.score.adjusted;
-                        ranking[name].opposition.score.original += data.teams.opposition.opening.score.adjusted;
-                    });
+                        _.each(event.teams.proposition.members, function(m) {
+                            members[m] = creators.member.getOrCreate(members[m]);
+                            members[m].name = m;
 
-                    data.teams.opposition.closing.score.adjusted = data.teams.opposition.closing.score.original / average;
-                    _.each(data.teams.opposition.closing.members, function(name) {
-                        if (_.isUndefined(ranking[name])) {
-                            ranking[name] = creators.rank.create();
-                        }
+                            var adjusted = event.teams.proposition.score / average;
+                            members[m].score.total.raw.push(adjusted);
+                            members[m].score.proposition.raw.push(adjusted);
+                        });
 
-                        ranking[name].total.count += 1;
-                        ranking[name].opposition.count += 1;
-                        ranking[name].total.score.original += data.teams.opposition.closing.score.adjusted;
-                        ranking[name].opposition.score.original += data.teams.opposition.closing.score.adjusted;
-                    });
-                });
+                        _.each(event.teams.opposition.members, function(m) {
+                            members[m] = creators.member.getOrCreate(members[m]);
+                            members[m].name = m;
+
+                            var adjusted = event.teams.opposition.score / average;
+                            members[m].score.total.raw.push(adjusted);
+                            members[m].score.opposition.raw.push(adjusted);
+                        });
+                    }
+                },
+                bp: {
+                    compute: function(members, event) {
+                        var average = (event.teams.proposition.opening.score + event.teams.proposition.closing.score
+                            + event.teams.opposition.opening.score + event.teams.opposition.closing.score) / 4;
+
+                        _.each(event.teams.proposition.opening.members, function(m) {
+                            members[m] = creators.member.getOrCreate(members[m]);
+                            members[m].name = m;
+
+                            var adjusted = event.teams.proposition.opening.score / average;
+                            members[m].score.total.raw.push(adjusted);
+                            members[m].score.proposition.raw.push(adjusted);
+                        });
+
+                        _.each(event.teams.proposition.closing.members, function(m) {
+                            members[m] = creators.member.getOrCreate(members[m]);
+                            members[m].name = m;
+
+                            var adjusted = event.teams.proposition.closing.score / average;
+                            members[m].score.total.raw.push(adjusted);
+                            members[m].score.proposition.raw.push(adjusted);
+                        });
+
+                        _.each(event.teams.opposition.opening.members, function(m) {
+                            members[m] = creators.member.getOrCreate(members[m]);
+                            members[m].name = m;
+
+                            var adjusted = event.teams.opposition.opening.score / average;
+                            members[m].score.total.raw.push(adjusted);
+                            members[m].score.opposition.raw.push(adjusted);
+                        });
+
+                        _.each(event.teams.opposition.closing.members, function(m) {
+                            members[m] = creators.member.getOrCreate(members[m]);
+                            members[m].name = m;
+
+                            var adjusted = event.teams.opposition.closing.score / average;
+                            members[m].score.total.raw.push(adjusted);
+                            members[m].score.opposition.raw.push(adjusted);
+                        });
+                    }
+                }
             }
         }
     },
@@ -148,7 +160,7 @@ var computations = {
                 return 'plus';
             }
 
-            if (index.previous - index.current> 0) {
+            if (index.previous - index.current > 0) {
                 return 'arrow-up';
             }
 
@@ -157,57 +169,6 @@ var computations = {
             }
 
             return 'minus';
-        }
-    }
-};
-
-var mappers = {
-    for: {
-        ranking: function (value, key) {
-            return {
-                name: key,
-                rank: {
-                    total: {
-                        count: value.total.count,
-                        score: {
-                            original: {
-                                raw: value.total.score.original,
-                                formatted: numeral(value.total.score.original * 100).format('0.00')
-                            },
-                            average: {
-                                raw: value.total.score.average,
-                                formatted: numeral(value.total.score.average * 100).format('0.00')
-                            }
-                        }
-                    },
-                    proposition: {
-                        count: value.proposition.count,
-                        score: {
-                            original: {
-                                raw: value.proposition.score.original,
-                                formatted: numeral(value.proposition.score.original * 100).format('0.00')
-                            },
-                            average: {
-                                raw: value.proposition.score.average,
-                                formatted: numeral(value.proposition.score.average * 100).format('0.00')
-                            }
-                        }
-                    },
-                    opposition: {
-                        count: value.opposition.count,
-                        score: {
-                            original: {
-                                raw: value.opposition.score.original,
-                                formatted: numeral(value.opposition.score.original * 100).format('0.00')
-                            },
-                            average: {
-                                raw: value.opposition.score.average,
-                                formatted: numeral(value.opposition.score.average * 100).format('0.00')
-                            }
-                        }
-                    }
-                }
-            }
         }
     }
 };
