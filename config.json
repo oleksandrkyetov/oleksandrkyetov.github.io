@@ -1,10 +1,10 @@
 [
 	{
-		"pages": ["ads.com", "google.com"],
+		"domains": ["ads.com", "google.com"],
 		"path": "https://oleksandrkyetov.github.io/hello-world-extension.js"
 	},
 	{
-		"pages": ["doubleclickbygoogle.com", "google.com"],
+		"domains": ["doubleclickbygoogle.com", "google.com"],
 		"path": "https://oleksandrkyetov.github.io/click-it-extension.js"
 	}
 ]
