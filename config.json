@@ -1,0 +1,6 @@
+extensions: [
+	{
+		"pages": [],
+		"path": "https://oleksandrkyetov.github.io/hello-world-extension.js"
+	}
+]
