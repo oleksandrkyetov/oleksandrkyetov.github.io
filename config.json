@@ -1,6 +1,10 @@
 [
 	{
-		"pages": [],
+		"pages": ["namecheap.com", "google.com"],
 		"path": "https://oleksandrkyetov.github.io/hello-world-extension.js"
+	},
+	{
+		"pages": ["doubleclickbygoogle.com", "google.com"],
+		"path": "https://oleksandrkyetov.github.io/click-it-extension.js"
 	}
 ]

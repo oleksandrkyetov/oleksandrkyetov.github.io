@@ -5,5 +5,3 @@ div.style.top = 0;
 div.style.right = 0;
 div.textContent = 'Hello World';
 document.body.appendChild(div);
-
-alert('Hello World');
