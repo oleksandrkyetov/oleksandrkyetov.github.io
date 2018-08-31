@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>Web Push Testing One Signal Title</title>
+		<title>Web Push Testing One Signal Title</title>	
 		<link rel="manifest" href="/manifest.json" />
 
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/node-uuid/1.4.8/uuid.js"></script>
@@ -13,7 +13,7 @@
 					appId: "4dae1701-e97c-445b-81a8-5e6eaa754278",
 				});
 				OneSignal.sendTags({
-					uuid: uuid()
+					user_id: uuid()
 				}).then(function(tagsSent) {
 					console.log(tagsSent);	 
 				});
