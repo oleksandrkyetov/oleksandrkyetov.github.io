@@ -12,10 +12,16 @@
 				OneSignal.init({
 					appId: "4dae1701-e97c-445b-81a8-5e6eaa754278",
 				});
-				OneSignal.sendTags({
-					user_id: uuid()
-				}).then(function(tagsSent) {
-					console.log(tagsSent);	 
+				OneSignal.getTags(function(tags) {
+					if (tags.hasOwnProperty("user_id") {
+						return tags["user_id"];
+					} else {
+						return OneSignal.sendTags({
+							user_id: uuid()
+						});
+					}
+				}).then(function(tags) {
+					console.log(tags);	 
 				});
 			});
 		</script>
