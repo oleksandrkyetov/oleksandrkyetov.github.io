@@ -13,7 +13,7 @@
 					appId: "4dae1701-e97c-445b-81a8-5e6eaa754278",
 				});
 				OneSignal.getTags(function(tags) {
-					if (tags.hasOwnProperty("user_id") {
+					if (tags.hasOwnProperty("user_id")) {
 						return tags["user_id"];
 					} else {
 						return OneSignal.sendTags({
